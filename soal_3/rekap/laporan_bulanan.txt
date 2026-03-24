@@ -1,0 +1,8 @@
+LAPORAN KEUANGAN KOST SLEBEW
+--------------------------------
+Total pemasukan (Aktif) : Rp100000
+Total tunggakan         : Rp20000
+Jumlah kamar terisi     : 2
+
+Daftar penghuni menunggak:
+- Mas amba (Kamar 20) - Rp20000
