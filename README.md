@@ -49,7 +49,7 @@ Pada blok pertama seperti yang di gambar adalah blok BEGIN. Blok ini menjalankan
 
 #### Pemrosesan Data
 
-![soal1Main](assets/soal1Main)
+![soal1Main](assets/soal1Main.png)
 
 Blok ini diawali dengan `NR>1` yang dimana menyatakan bahwa program didalam kurung kurawal hanya berlaku untuk baris ke-2 dan seterusnya. hal ini dilakukan agar bagian header tidak terbaca dan menyebabkan error.  
 
