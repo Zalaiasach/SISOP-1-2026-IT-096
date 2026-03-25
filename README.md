@@ -37,10 +37,12 @@ Pada soal kita diberitahu bahwa untuk meng-output file, kita diarahkan untuk men
 `awk -f KANJ.sh passenger.csv a/b/c/d/e`  
 
 Karena hal itu kita menggunakan *shebang* `#!/usr/bin/awk -f` .  
-Hal ini digunakan untuk memberitahu sistem operasi bahwa file ini harus dijalankan menggunakan program awk.  
-Pada blok pertama seperti yang di gambar adalah blok BEGIN. Blok ini menjalankan perintah sebanyak satu  kali sebelum file dibaca oleh awk.  
+Hal ini digunakan untuk memberitahu sistem operasi bahwa file ini harus dijalankan menggunakan program awk.   
+
+Pada blok pertama seperti yang di gambar adalah blok BEGIN. Blok ini menjalankan perintah sebanyak satu  kali sebelum file dibaca oleh awk.   
+
 `FS= ","` FS (Field Seperator) menentukan pemisah antar kolom berupa tanda koma (,).  
-`RS="\r\n"` RS(Record Seperator) menentukan bahwa setiap baris yang diakhiri \r\n, hal ini penting digunakan untuk menghitung gerbong.  
-`soal=ARGV[2]` Mengambil argumen yang diketik di terminal ([0]=program yang digunakan(awk),[1]=file yang dibaca(passenger.csv),[2]=argumen tambahan(untuk soal ini a/b/c/d/e)). Argumen disimpan di variabel bernama soal.  
+`RS="\r\n"` RS(Record Seperator) menentukan bahwa setiap baris yang diakhiri \r\n.  hal ini penting digunakan untuk menghitung gerbong.  
+`soal=ARGV[2]` Mengambil argumen yang diketik di terminal.  ([0]=program yang digunakan(awk),[1]=file yang dibaca(passenger.csv),[2]=argumen tambahan(untuk soal ini a/b/c/d/e)). Argumen disimpan di variabel bernama soal.  
 `delete ARGV[2]` Menghapus argumen agar tidak dibuka awk dan menyebabkan error.  
 `total_usia=0` & `usia_tertua=0` menyiapkan variabel untuk digunakan dengan nilai awal 0.  
