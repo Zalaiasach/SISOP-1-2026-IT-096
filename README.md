@@ -60,5 +60,6 @@ if(!gerbong[$4]++){
 		jumlah_gerbong++
 	}
 ```  
-ini adalah program untuk menghitung gerbong
+ini adalah program untuk menghitung gerbong, `gerbong[$4]` adalah array untuk mencatat gerbong, tanda `!` dan `++` memastikan bahwa `jumlah_gerbong++` hanya akan berjalan jika nama gerbong tersebut belum pernah muncul/unik.
+
 
