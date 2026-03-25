@@ -43,7 +43,22 @@ Pada blok pertama seperti yang di gambar adalah blok BEGIN. Blok ini menjalankan
 
 `FS= ","` FS (Field Seperator) menentukan pemisah antar kolom berupa tanda koma (,).  
 `RS="\r\n"` RS(Record Seperator) menentukan bahwa setiap baris yang diakhiri \r\n.  hal ini penting digunakan untuk menghitung gerbong.  
-`soal=ARGV[2]` Mengambil argumen yang diketik di terminal.  
-([0]=program yang digunakan(awk),[1]=file yang dibaca(passenger.csv),[2]=argumen tambahan(untuk soal ini a/b/c/d/e)). Argumen disimpan di variabel bernama soal.  
+`soal=ARGV[2]` Mengambil argumen yang diketik di terminal.  ([0]=program yang digunakan(awk),[1]=file yang dibaca(passenger.csv),[2]=argumen tambahan(untuk soal ini a/b/c/d/e)). Argumen disimpan di variabel bernama soal.  
 `delete ARGV[2]` Menghapus argumen agar tidak dibuka awk dan menyebabkan error.  
-`total_usia=0` & `usia_tertua=0` menyiapkan variabel untuk digunakan dengan nilai awal 0.  
+`total_usia=0` & `usia_tertua=0` menyiapkan variabel untuk digunakan dengan nilai awal 0. 
+
+#### Pemrosesan Data
+
+![soal1Main](assets/soal1Main)
+
+Blok ini diawali dengan `NR>1` yang dimana menyatakan bahwa program didalam kurung kurawal hanya berlaku untuk baris ke-2 dan seterusnya. hal ini dilakukan agar bagian header tidak terbaca dan menyebabkan error.  
+
+`jumlah_penumpang++` digunakan untuk menghitung berapa banyak orang yang ada di data.  
+
+```shell
+if(!gerbong[$4]++){
+		jumlah_gerbong++
+	}
+```  
+ini adalah program untuk menghitung gerbong
+
