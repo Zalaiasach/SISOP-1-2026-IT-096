@@ -117,15 +117,15 @@ awk -f KANJ.sh passenger.csv a/b/c/d/e
 ```  
 Begini hasil outputnya:  
 ##### Jumlah penumpang
-![soal1OutputA](assets/soal_1/Soal1OutputA.png)  
+![soal1OutputA](assets/soal_1/soal1OutputA.png)  
 ##### Jumlah Gerbong
-![soal1OutputA](assets/soal_1/Soal1OutputB.png)
+![soal1OutputA](assets/soal_1/soal1OutputB.png)
 ##### Penumpang tertua
-![soal1OutputA](assets/soal_1/Soal1OutputC.png)
+![soal1OutputA](assets/soal_1/soal1OutputC.png)
 ##### Rata-rata usia penumpang  
-![soal1OutputA](assets/soal_1/Soal1OutputD.png)
+![soal1OutputA](assets/soal_1/soal1OutputD.png)
 ##### Jumlah penumpang business
-![soal1OutputA](assets/soal_1/Soal1OutputE.png)
+![soal1OutputA](assets/soal_1/soal1OutputE.png)
 ##### Jika argumen tidak sesuai
-![soal1OutputA](assets/soal_1/Soal1OutputSalah.png)
+![soal1OutputA](assets/soal_1/soal1OutputSalah.png)
 
