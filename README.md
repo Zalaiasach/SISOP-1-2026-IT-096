@@ -60,6 +60,55 @@ if(!gerbong[$4]++){
 		jumlah_gerbong++
 	}
 ```  
-ini adalah program untuk menghitung gerbong, `gerbong[$4]` adalah array untuk mencatat gerbong, tanda `!` dan `++` memastikan bahwa `jumlah_gerbong++` hanya akan berjalan jika nama gerbong tersebut belum pernah muncul/unik.
+ini adalah perintah untuk menghitung gerbong, `gerbong[$4]` adalah array untuk mencatat gerbong, tanda `!` dan `++` memastikan bahwa `jumlah_gerbong++` hanya akan berjalan jika nama gerbong tersebut belum pernah muncul/unik.   
 
+```shell
+if($2>usia_tertua){
+		usia_tertua=$2
+		nama_tertua=$1
+	}
+```  
+ini adalah perintah untuk mencari penumpang tertua beserta berapa umurnya. `$2>usia_tertua` berarti program akan mengecek kolom ke 2, jika lebih besar dari 'usia_tertua' saat ini yang bernilai 0, isi dari variabel 'usia_tertua' berganti dan akan terus dilakukan hingga selesai beserta mengambil nama orang dengan umur tertua.  
+``` shell
+	total_usia += $2
+```  
+ini adalah perintah untuk menghitung total semua usia, ini akan digunakan untuk menghitung rata-rata usia penumpang.  
+
+```shell
+    if($3 == "Business"){
+		penumpang_bisnis++
+	}
+``` 
+ini adalah perintah untuk menghitung banyak orang di kelas Business. `if($3 == "Business")` berarti perintah berjalan jika di kolom ke 3 terdapat kata "Business". Jika di kolom 3 sesuai, maka `penumpang_bisnis` ditambahkan 1.   
+
+#### END  
+![soal1END](assets/soal1END)  
+Blok END akan dijalankan sekali setelah semua pembacaan dan pemrosesan file selesai.  
+```shell
+    rata_usia=int(total_usia/jumlah_penumpang)
+```  
+Setelah kolom usia ditambahkan, kita dapat menghitung rata-rata nya dengan membagi `total_usia` dengan `jumlah_penumpang`.  
+```shell
+if(soal=="a"){
+		print "Jumlah seluruh penumpang KANJ adalah " jumlah_penumpang " orang"
+	} 
+	else if(soal=="b"){
+		print "Jumlah gerbong penumpang KANJ adalah " jumlah_gerbong
+	} 
+	else if(soal=="c"){
+		print nama_tertua " adalah penumpang kereta tertua dengan usia " usia_tertua
+	} 
+	else if(soal=="d"){
+		print "Rata-rata usia penumpang adalah " rata_usia " tahun"
+	} 
+	else if(soal=="e"){
+		print "Jumlah penumpang business class ada " penumpang_bisnis " orang"
+	} 
+	else {
+		print "Soal tak dikenal, tolong input a/b/c/d/e"
+	}
+```  
+Perintah ini digunakan untuk mengeluarkan hasil pemrosesan data. Seperti yang sudah dijelaskan di blok BEGIN, variabel soal akan mengambil argumen(a/b/c/d/e) setelah passenger.csv di terminal dan mengeluarkan sesuai dengan apa yang diketikan.
+
+#### Output  
 
