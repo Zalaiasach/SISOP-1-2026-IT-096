@@ -82,7 +82,7 @@ ini adalah perintah untuk menghitung total semua usia, ini akan digunakan untuk 
 ini adalah perintah untuk menghitung banyak orang di kelas Business. `if($3 == "Business")` berarti perintah berjalan jika di kolom ke 3 terdapat kata "Business". Jika di kolom 3 sesuai, maka `penumpang_bisnis` ditambahkan 1.   
 
 #### END  
-![soal1END](assets/soal1END.png)  
+![soal1END](assets/soal1END)  
 Blok END akan dijalankan sekali setelah semua pembacaan dan pemrosesan file selesai.  
 ```shell
     rata_usia=int(total_usia/jumlah_penumpang)
@@ -111,4 +111,7 @@ if(soal=="a"){
 Perintah ini digunakan untuk mengeluarkan hasil pemrosesan data. Seperti yang sudah dijelaskan di blok BEGIN, variabel soal akan mengambil argumen(a/b/c/d/e) setelah passenger.csv di terminal dan mengeluarkan sesuai dengan apa yang diketikan.
 
 #### Output  
-
+Untuk menjalankan program dengan menggunakan perintah:
+```shell
+awk -f KANJ.sh passenger.csv a/b/c/d/e
+```
