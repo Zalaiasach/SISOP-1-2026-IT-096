@@ -82,7 +82,7 @@ ini adalah perintah untuk menghitung total semua usia, ini akan digunakan untuk 
 ini adalah perintah untuk menghitung banyak orang di kelas Business. `if($3 == "Business")` berarti perintah berjalan jika di kolom ke 3 terdapat kata "Business". Jika di kolom 3 sesuai, maka `penumpang_bisnis` ditambahkan 1.   
 
 #### END  
-![soal1END](assets/soal1END)  
+![soal1END](assets/soal1END.png)  
 Blok END akan dijalankan sekali setelah semua pembacaan dan pemrosesan file selesai.  
 ```shell
     rata_usia=int(total_usia/jumlah_penumpang)
