@@ -31,7 +31,7 @@ $4 = Gerbong penumbang
 kita akan menggunakan `awk` , sebuah bahasa pemrograman khusus untuk pemrosesan teks, ekstraksi data, dan pembuatan laporan terstruktur pada sistem Unix/Linux.  
 #### BEGIN
 
-![soal1BEGIN](assets/soal1Begin.png)
+![soal1BEGIN](assets/soal_1/soal1Begin.png)
 
 Pada soal kita diberitahu bahwa untuk meng-output file, kita diarahkan untuk menggunakan:  
 `awk -f KANJ.sh passenger.csv a/b/c/d/e`  
@@ -49,7 +49,7 @@ Pada blok pertama seperti yang di gambar adalah blok BEGIN. Blok ini menjalankan
 
 #### Pemrosesan Data
 
-![soal1Main](assets/soal1Main.png)
+![soal1Main](assets/soal_1/soal1Main.png)
 
 Blok ini diawali dengan `NR>1` yang dimana menyatakan bahwa program didalam kurung kurawal hanya berlaku untuk baris ke-2 dan seterusnya. hal ini dilakukan agar bagian header tidak terbaca dan menyebabkan error.  
 
@@ -59,7 +59,7 @@ Blok ini diawali dengan `NR>1` yang dimana menyatakan bahwa program didalam kuru
 if(!gerbong[$4]++){
 		jumlah_gerbong++
 	}
-```  
+```     
 ini adalah perintah untuk menghitung gerbong, `gerbong[$4]` adalah array untuk mencatat gerbong, tanda `!` dan `++` memastikan bahwa `jumlah_gerbong++` hanya akan berjalan jika nama gerbong tersebut belum pernah muncul/unik.   
 
 ```shell
@@ -82,7 +82,7 @@ ini adalah perintah untuk menghitung total semua usia, ini akan digunakan untuk 
 ini adalah perintah untuk menghitung banyak orang di kelas Business. `if($3 == "Business")` berarti perintah berjalan jika di kolom ke 3 terdapat kata "Business". Jika di kolom 3 sesuai, maka `penumpang_bisnis` ditambahkan 1.   
 
 #### END  
-![soal1END](assets/soal1END)  
+![soal1END](assets/soal_1/soal1END.png)  
 Blok END akan dijalankan sekali setelah semua pembacaan dan pemrosesan file selesai.  
 ```shell
     rata_usia=int(total_usia/jumlah_penumpang)
@@ -114,4 +114,8 @@ Perintah ini digunakan untuk mengeluarkan hasil pemrosesan data. Seperti yang su
 Untuk menjalankan program dengan menggunakan perintah:
 ```shell
 awk -f KANJ.sh passenger.csv a/b/c/d/e
-```
+```  
+Begini hasil outputnya:  
+##### Jumlah penumpang
+!
+
