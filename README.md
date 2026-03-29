@@ -231,7 +231,7 @@ f.Fitur untuk keluar program
 Scriptnya akan diberi nama kost_slebew.sh. Data-data nya akan di simpann di folder-folder yang berbeda.  
 
 ### Script
-Script ini cukup panjang, jadi akan kiat bahas satu persatu.  
+Script ini cukup panjang, jadi akan kita bahas satu persatu.  
 #### Bagian Awal
 ```shell
 #!/bin/bash
@@ -401,4 +401,293 @@ Perintah ini digunakan untuk melakukan pengecekan apakah nama ada di database, j
 		awk -F, -v n="$nama" 'tolower($1)!=tolower(n)' data/penghuni.csv > data/temp.csv
 		mv data/temp.csv data/penghuni.csv
 ```
+Setelah dicek apakah ada namanya atau tidak, akan kita ambil data hari ini untuk pencatatan kapan penghapusan. Lalu ```$record``` dan ```$tanggal_hapus``` disatukan dan ditaruh di ```sampah/history_hapus.csv```. Sementara awk digunakan untuk mencetak nama yang tidak dihapus dan tidak mencetak nama yang ingin dihapus.  
+
+#### Tampilkan Daftar
+```shell
+tampilkan_daftar() {
+	echo "================================================================="
+    	echo "                  DAFTAR PENGHUNI KOST SLEBEW                    "
+    	echo "================================================================="
+	
+	awk -F, '
+	BEGIN {
+		printf "%-3s | %-15s | %-5s | %-15s | %-10s\n", "No", "Nama", "Kamar", "Harga Sewa", "Status"
+        	print "-----------------------------------------------------------------"
+        	total=0; aktif=0; nunggak=0
+	}
+	{
+		if(length($1) > 0) {
+            		total++
+            		if (tolower($5) == "aktif") aktif++
+            		if (tolower($5) == "menunggak") nunggak++
+            		printf "%-3d | %-15s | %-5s | Rp%-13s | %-10s\n", total, $1, $2, $3, $5
+        	}
+	}
+	END {
+		print "-----------------------------------------------------------------"
+        	printf "Total: %d penghuni | Aktif: %d | Menunggak: %d\n", total, aktif, nunggak
+        	print "-----------------------------------------------------------------"
+	}' data/penghuni.csv
+
+	read -p "Tekan [ENTER] untuk kembali ke menu..."
+}
+```  
+Pada fungsi ini tidak terlalu banyak yang bisa dijelaskan. awk mengambil data dari ```data/penghuni.csv``` yang lalu dicetak.  
+```shell
+if(length($1) > 0) {
+            		total++
+            		if (tolower($5) == "aktif") aktif++
+            		if (tolower($5) == "menunggak") nunggak++
+            		printf "%-3d | %-15s | %-5s | Rp%-13s | %-10s\n", total, $1, $2, $3, $5
+}
+```
+Perintah ini digunakan untuk menghitung jumlah penghuni aktif dan menunggak serta total penghuni.  
+#### Update Status
+```shell
+update_status() {
+	echo "=========================================="
+    	echo "               UPDATE STATUS              "
+    	echo "=========================================="
+    	read -p "Masukkan Nama Penghuni: " nama
+    	read -p "Masukkan Status Baru (Aktif/Menunggak): " status_baru
+
+	stat_lower=$(echo "$status_baru" | tr '[:upper:]' '[:lower:]')
+	if [[ "$stat_lower" == "aktif" ]]; then
+		stat_valid="Aktif"
+	elif [[ "$stat_lower" == "menunggak" ]]; then
+        	stat_valid="Menunggak"
+    	else
+        	echo "Error: Status tidak valid."
+        	read -p "Tekan [ENTER] untuk kembali ke menu..."
+        	return
+	fi
+
+	if grep -iq "^$nama," data/penghuni.csv; then
+		awk -F, -v n="$nama" -v s="$stat_valid" 'BEGIN{OFS=","} tolower($1)==tolower(n) {$5=s} 1' data/penghuni.csv > data/temp.csv
+		mv data/temp.csv data/penghuni.csv
+		echo -e "\n[✓] Status $nama berhasil diubah menjadi: $stat_valid"
+    	else
+        	echo -e "\n[X] Penghuni dengan nama $nama tidak ditemukan."
+    	fi
+    	read -p "Tekan [ENTER] untuk kembali ke menu..."
+}
+```
+Fungsi ini digunakan untuk merubah status penghuni menjadi aktif maupun meunggak. Bagian awal mirip dengan fungsi di penambahan penghuni bagian status.  
+```shell
+if grep -iq "^$nama," data/penghuni.csv; then
+		awk -F, -v n="$nama" -v s="$stat_valid" 'BEGIN{OFS=","} tolower($1)==tolower(n) {$5=s} 1' data/penghuni.csv > data/temp.csv
+		mv data/temp.csv data/penghuni.csv
+		echo -e "\n[✓] Status $nama berhasil diubah menjadi: $stat_valid"
+```
+Perintah ini untuk mengubah ```penghuni.csv``` untuk berubah ke versi ter-update.  
+
+#### Cetak Laporan
+```shell
+cetak_laporan() {
+    	echo "------------------------------------------------"
+    	echo "          LAPORAN KEUANGAN KOST SLEBEW          "
+    	echo "------------------------------------------------"
+    
+    	awk -F, '
+    	BEGIN {
+        	pemasukan = 0
+        	tunggakan = 0
+        	kamar_terisi = 0
+        	daftar_nunggak = ""
+    	}
+    	{
+        	if(length($1) > 0) {
+            		kamar_terisi++
+           		if (tolower($5) == "aktif") {
+                		pemasukan += $3
+            		} else if (tolower($5) == "menunggak") {
+                		tunggakan += $3
+                		daftar_nunggak = daftar_nunggak "- " $1 " (Kamar " $2 ") - Rp" $3 "\n"
+            		}
+        	}
+    	}
+    	END {
+        	report_file = "rekap/laporan_bulanan.txt"
+        
+        	printf "Total pemasukan (Aktif) : Rp%d\n", pemasukan
+        	printf "Total tunggakan         : Rp%d\n", tunggakan
+        	printf "Jumlah kamar terisi     : %d\n\n", kamar_terisi
+        	print "Daftar penghuni menunggak:"
+        	if (length(daftar_nunggak) > 0) {
+            		printf "%s", daftar_nunggak
+        	} else {
+            		print "  Tidak ada tunggakan."
+        	}
+        
+        	printf "LAPORAN KEUANGAN KOST SLEBEW\n" > report_file
+        	printf "--------------------------------\n" >> report_file
+        	printf "Total pemasukan (Aktif) : Rp%d\n", pemasukan >> report_file
+        	printf "Total tunggakan         : Rp%d\n", tunggakan >> report_file
+        	printf "Jumlah kamar terisi     : %d\n\n", kamar_terisi >> report_file
+        	printf "Daftar penghuni menunggak:\n" >> report_file
+        	if (length(daftar_nunggak) > 0) {
+             		printf "%s", daftar_nunggak >> report_file
+        	} else {
+             		print "  Tidak ada tunggakan." >> report_file
+        	}
+    	}' data/penghuni.csv
+    
+    	echo -e "\n[✓] Laporan berhasil disimpan ke rekap/laporan_bulanan.txt"
+    	read -p "Tekan [ENTER] untuk kembali ke menu..."
+}
+```
+Pada fungsi ini, akan diambil data dari ```data/peenghuni.csv``` untuk mengeluarkan laporan. 
+```shell
+if(length($1) > 0) {
+            		kamar_terisi++
+           		if (tolower($5) == "aktif") {
+                		pemasukan += $3
+            		} else if (tolower($5) == "menunggak") {
+                		tunggakan += $3
+                		daftar_nunggak = daftar_nunggak "- " $1 " (Kamar " $2 ") - Rp" $3 "\n"
+            		}
+        	}
+```
+Perintah ini digunakan untuk menambah jumlah kamar yang terisi dan memberi label status.
+#### Kelola Cron
+```shell
+kelola_cron() {
+    	while true; do
+        	clear
+        	echo "=========================================="
+        	echo "             MENU KELOLA CRON             "
+        	echo "=========================================="
+        	echo "1. Lihat Cron Job Aktif"
+        	echo "2. Daftarkan Cron Job Pengingat"
+        	echo "3. Hapus Cron Job Pengingat"
+        	echo "4. Kembali"
+        	echo "=========================================="
+        	read -p "Pilih [1-4]: " pilihan_cron
+
+        	case $pilihan_cron in
+            		1)
+                		echo -e "\n--- Daftar Cron Job Pengingat Tagihan ---"
+                		if crontab -l 2>/dev/null | grep -q "$SCRIPT_PATH --check-tagihan"; then
+                    			crontab -l | grep "$SCRIPT_PATH --check-tagihan"
+                		else
+                    			echo "Tidak ada cron job aktif."
+                		fi
+                		read -p "Tekan [ENTER] untuk kembali..."
+                		;;
+            		2)
+                		read -p "Masukkan Jam (0-23): " jam
+                		read -p "Masukkan Menit (0-59): " menit
+                
+                		(crontab -l 2>/dev/null | grep -v "$SCRIPT_PATH --check-tagihan") | crontab -
+                
+                		(crontab -l 2>/dev/null; echo "$menit $jam * * * $SCRIPT_PATH --check-tagihan") | crontab -
+                		echo -e "\n[✓] Cron job berhasil ditambahkan untuk jam $jam:$menit."
+                		read -p "Tekan [ENTER] untuk kembali..."
+                		;;
+            		3)
+                		(crontab -l 2>/dev/null | grep -v "$SCRIPT_PATH --check-tagihan") | crontab -
+                		echo -e "\n[✓] Cron job pengingat tagihan berhasil dihapus."
+                		read -p "Tekan [ENTER] untuk kembali..."
+                		;;
+            		4)
+                		break
+                		;;
+            		*)
+                		echo "Pilihan tidak valid."
+                		sleep 1
+                		;;
+        	esac
+    	done
+}
+```
+Fungsi ini untuk mengelola cron untuk pengingat tagihan.  
+```shell
+	if crontab -l 2>/dev/null | grep -q "$SCRIPT_PATH --check-tagihan"; then
+                    			crontab -l | grep "$SCRIPT_PATH --check-tagihan"
+```
+Ini digunakan untuk mengecek apakah ada cron yang aktif atau tidak.
+```shell
+read -p "Masukkan Jam (0-23): " jam
+                		read -p "Masukkan Menit (0-59): " menit
+                
+                		(crontab -l 2>/dev/null | grep -v "$SCRIPT_PATH --check-tagihan") | crontab -
+                
+                		(crontab -l 2>/dev/null; echo "$menit $jam * * * $SCRIPT_PATH --check-tagihan") | crontab -
+```
+Ini digunakan untuk memasukan kapan dilakukan pengingat, dimasukan jam dalam bentuk 0-23 dan menit dalam bentuk 0-59.
+```shell
+	(crontab -l 2>/dev/null | grep -v "$SCRIPT_PATH --check-tagihan") | crontab -
+```
+Ini digunakan untuk menghapus cron yang tidak digunakan lagi.
+
+#### Menu
+```shell
+while true; do
+	clear
+    	echo " _  __        _     ____  _      _"
+    	echo "| |/ /___ ___| |_  / ___|| | ___| |__   _____      __"
+    	echo "| ' // _ / __| __| \___ \| |/ _ | '_ \ / _ \ \ /\ / /"
+    	echo "| . \ (_) \__ | |_   ___) | |  __| |_) |  __/\ V  V /"
+    	echo "|_|\_\___/|___/\__| |____/|_|\___|_.__/ \___| \_/\_/"
+    	echo "                                                 "
+    	echo "      SISTEM MANAJEMEN KOST SLEBEW AMBATUKAM     "
+    	echo "-------------------------------------------------"
+    	echo " ID | OPTION                                     "
+    	echo "-------------------------------------------------"
+    	echo "  1 | Tambah Penghuni Baru"
+    	echo "  2 | Hapus Penghuni"
+    	echo "  3 | Tampilkan Daftar Penghuni"
+    	echo "  4 | Update Status Penghuni"
+    	echo "  5 | Cetak Laporan Keuangan"
+    	echo "  6 | Kelola Cron (Pengingat Tagihan)"
+    	echo "  7 | Exit Program"
+    	echo "-------------------------------------------------"
+    	read -p "Enter option [1-7]: " menu_utama
+
+    	case $menu_utama in
+        	1) tambah_penghuni ;;
+        	2) hapus_penghuni ;;
+        	3) tampilkan_daftar ;;
+        	4) update_status ;;
+        	5) cetak_laporan ;;
+        	6) kelola_cron ;;
+        	7) 
+            		echo "Terima kasih telah menggunakan sistem Manajemen Kost Slebew!"
+            		exit 0 
+            	;;
+        	*) 
+            		echo "Pilihan tidak valid. Silakan pilih 1-7."
+            		sleep 1 
+            	;;
+    	esac
+done
+```
+Menu utama dari program, ```while true; do``` digunakan agar program tidak langsung mati setelah menjalankan satu perintah, program hanya keluar jika kita mengetik '7'.  
+
+### Output
+#### Menu
+![soal3menu](assets/soal3menu.png)
+#### Tambah Penghuni
+![soal3tambah](assets/soal3tambah.png)
+#### Hapus Penghuni
+![soal3hapus](assets/soal3hapus.png)
+#### Daftar Penghuni
+![soal3daftar](assets/soal3daftar.png)
+#### Update Status
+![soal3update](assets/soal3update.png)
+#### Laporan Keuangan
+![soal3laporan](assets/soal3laporan.png)
+#### Kelola Cron
+![soal3cron](assets/soal3menuCron.png)
+#### Tambah Cron
+![soal3tambahCron](assets/soal3tambahCron.png)
+#### Daftar Cron Aktif
+![soal3daftarCron](assets/soal3daftarCron.png)
+#### Hapus Cron
+![soal3hapusCron](assets/soal3hapusCron.png)  
+
+### Kendala
+Pada bagian ini, saya akan memberikan kendala selama pengerjaan saya:  
+- Cron yang tidak dapat memberi pengingat sehingga saya sehingga saya harus mengupdate manual dengan ```./kost_slebew --check-tagihan```
 
