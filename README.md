@@ -134,13 +134,13 @@ Begini hasil outputnya:
 Di soal ini kita diberikan suatu link untuk mendownload file menggunakan command gdown. Cara mendownloadnya kita dapat mengcopy id file di link ang diberikan dan mengetikan perintah di terminal:  
 ```gdown --id "id file" -O nama yang dinginkan```  
 yang dimana kita akan memasukan:  
-```gdown --id "1q10pHSC3KFfvEiCN3V6PTroPR7YGHF6Q" -O peta-ekspedisi-amba.pdf```
+```gdown --id "1q10pHSC3KFfvEiCN3V6PTroPR7YGHF6Q" -O peta-ekspedisi-amba.pdf```  
 Setelah berhasil mendownload, kita mendapatkan sebuah file bernama 'peta-ekspedisi-amba.pdf' yang kemudian akan kita letakkan di folder bernama ekspedisi.  File ini akan kita buka dengan perintah ```cat``` diterminal.   
 
 Setelah dibuka dengan ```cat``` , kita menemukan sebuah link:   
 ```https://github.com/pocongcyber77/peta-gunung-kawi.git```  
 Jika kita membuka link ini, akan terbuka sebuah repository github. Di dalam repository tersebut terdapat file bernama ```gsxtrack.json```. Agar bisa kita kerjakan soal ini, kita akan melakukan clone repository dengan perintah di terminal:  
-```git clone https://github.com/pocongcyber77/peta-gunung-kawi.git```  
+```git clone https://github.com/pocongcyber77/peta-gunung-kawi.git```   
 
 Setelah kita clone repository, kita dapat lanjut mengerjakan tugasnya didalam folder bernama peta-gunung-kawi. Tugas yang diberikan ialah:  
 a. Mengambil data dari gsxtrack.json  
@@ -151,4 +151,23 @@ Disini kita akan membuat dua script, script untuk mengambil data dan script untu
 
 #### parserkoordinat.sh
 Pada script ini, outputnya akan menjadi berupa file txt yang bernama "titik-penting.txt" yang akan berisi id, site_name, latitude, dan longitude.  
-![soal2parser](assets/soal_2/soal2parser.png)
+
+```shell
+#!/bin/bash
+
+input_file="gsxtrack.json"
+output_file="titik-penting.txt"
+
+grep -E '"id"|"site_name"|"latitude"|"longitude"' "$input_file"|\
+sed -E 's/.*: //; s/[",]//g' | \
+awk '{
+	id=$0; getline;
+	name=$0; getline;
+	lat=$0; getline;
+	lon=$0;
+	printf "%s, %s, %s, %s\n",id, name, lat, lon
+}' | sort > "$output_file"
+
+echo "File $output_file yang dinginkan telah selesai dibuat"
+```
+
