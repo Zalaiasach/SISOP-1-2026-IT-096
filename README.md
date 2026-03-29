@@ -169,5 +169,17 @@ awk '{
 }' | sort > "$output_file"
 
 echo "File $output_file yang dinginkan telah selesai dibuat"
-```
+```  
 
+Pada kode ini kita menggunakan ```grep -E '"id"|"site_name"|"latitude"|"longitude"' "$input_file"|\``` untuk mengambil data dari file json.   
+
+Kita menggunakan ```sed -E 's/.*: //; s/[",]//g' | \``` untuk agar kita hanya mengambil bagian yang kita perlukan, jadi yang awalnya ```"latitude": -7.928810``` Hanya akan menjadi ```-7.928810```
+
+Untuk penggunaan awk sendiri untuk menggabungkan 4 data yang sudah diambil.  
+Sort digunakan agar berurutan.  
+
+Setelah dijalankan, akan dibuat sebuah file bernama ```titik-peenting.txt``` yang berisi data-data yang sudah kita ambil.
+
+#### nemupusaka.sh
+Setelah kita mengambil data, kita akan mencari titik lokasi pusaka dengan rumus:  
+$$Midpoint = \left( \frac{x_1 + x_2}{2}, \frac{y_1 + y_2}{2} \right)$$
