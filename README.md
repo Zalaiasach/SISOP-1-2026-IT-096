@@ -667,25 +667,25 @@ Menu utama dari program, ```while true; do``` digunakan agar program tidak langs
 
 ### Output
 #### Menu
-![soal3menu](assets/soal3menu.png)
+![soal3menu](assets/soal_3/soal3menu.png)
 #### Tambah Penghuni
-![soal3tambah](assets/soal3tambah.png)
+![soal3tambah](assets/soal_3/soal3tambah.png)
 #### Hapus Penghuni
-![soal3hapus](assets/soal3hapus.png)
+![soal3hapus](assets/soal_3/soal3hapus.png)
 #### Daftar Penghuni
-![soal3daftar](assets/soal3daftar.png)
+![soal3daftar](assets/soal_3/soal3daftar.png)
 #### Update Status
-![soal3update](assets/soal3update.png)
+![soal3update](assets/soal_3/soal3update.png)
 #### Laporan Keuangan
-![soal3laporan](assets/soal3laporan.png)
+![soal3laporan](assets/soal_3/soal3laporan.png)
 #### Kelola Cron
-![soal3cron](assets/soal3menuCron.png)
+![soal3cron](assets/soal_3/soal3menuCron.png)
 #### Tambah Cron
-![soal3tambahCron](assets/soal3tambahCron.png)
+![soal3tambahCron](assets/soal_3/soal3tambahCron.png)
 #### Daftar Cron Aktif
-![soal3daftarCron](assets/soal3daftarCron.png)
+![soal3daftarCron](assets/soal_3/soal3daftarCron.png)
 #### Hapus Cron
-![soal3hapusCron](assets/soal3hapusCron.png)  
+![soal3hapusCron](assets/soal_3/soal3hapusCron.png)  
 
 ### Kendala
 Pada bagian ini, saya akan memberikan kendala selama pengerjaan saya:  
