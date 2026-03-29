@@ -338,6 +338,67 @@ tambah_penghuni() {
 ```  
 Pertama kita dapat memasukan nama. Selanjutnya, kita akan memasukan nomor kamar.  
 ```shell
-if grep -q  "^.*,$kamar,.*,.*,.*$" data/penghuni.csv;
+if grep -q  "^.*,$kamar,.*,.*,.*$" data/penghuni.csv; then ...
 ```  
-ini digunakan untuk mengecek di file penghuni.csv apakah
+ini digunakan untuk mengecek di file penghuni.csv apakah nomor kamar yang dimasukan sudah terisi atau belum. Jika sudah terisi maka harus mengisi nomor berbeda. Setelah itu kita dapat memasukan harga sewa penghuni.  
+```shell
+if [[ "$harga" =~ ^[0-9]+$ ]] && [ "$harga" -gt 0 ]; then ...
+```  
+Perintah ini digunakan agar harga hanya boleh diisi angka 0-9 sehingga tidak boleh ada simbol lain dan harga tidak boleh bernilai minus.  
+Setelah memasukan harga, kita dapat memasukan tanggal penghuni masuk.  
+```shell
+hari_ini=$(date +%Y-%m-%d)
+if [[ ! "$tanggal" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then ...
+```
+Pertama-tama, program akan mengambil data tanggal hari ini, berikutnya program melakukan beberapa pengecekan. Perintah pertama ini digunakan untuk mengecek penggunaan format penanggalan. Format penanggalan yang akan digunakan adalah YYYY-MM-DD. Dari perintah tersebut kita hanya boleh mengisi angka 0-9 berjumlah 4 digit, garis strip (-),angka 0-9 berjumlah 2 digit, garis strip (-), lalu angka 0-9 berjumlah 2 digit. Jika misal kita menggunakan format DD-MM-YYYY maka akan muncul pesan error.  
+```shell
+if ! date -d "$tanggal" >/dev/null 2>&1; then ...
+```
+Ini digunakan untuk mengecek kevalidan tanggal dengan cara menerjemahkan mengecek date apakah sesuai atau tidak, contoh tanggal tidak valid misal 2020-02-30. ```>/dev/null 2>$1``` digunakan untuk membuang teks error bawaan agar dapat kita gantikan dengan pesan error kita sendiri.  
+```shell
+if [[ "$tanggal" > "$hari_ini" ]]; then ...
+```
+Ini digunakan untuk mengecek agar tanggal yang dimasukkan tidak dari masa depan.  Berikutnya kita dapat memasukan status penghuni  
+```shell
+status_lower=$(echo "$status_input" | tr '[:upper:]' '[:lower:]')
+```  
+Perintah pertama digunakan agar jika dimasukan huruf kapital, akan menjadi huruf kapitil untuk mencegah terjadinya error saat memasukan status karena perbedaan besar huruf.  
+
+#### Hapus Penghuni
+```shell
+hapus_penghuni() {
+	echo "=========================================="
+    	echo "              HAPUS PENGHUNI              "
+    	echo "=========================================="
+    	read -p "Masukkan nama penghuni yang akan dihapus: " nama
+	
+	record=$(awk -F, -v n="$nama" 'tolower($1)==tolower(n) {print $0; exit}' data/penghuni.csv)
+
+	if [[ -n "$record" ]]; then
+		tanggal_hapus=$(date +%Y-%m-%d)
+		echo "$record,$tanggal_hapus" >> sampah/history_hapus.csv
+
+		awk -F, -v n="$nama" 'tolower($1)!=tolower(n)' data/penghuni.csv > data/temp.csv
+		mv data/temp.csv data/penghuni.csv
+
+		echo -e "\n[✓] Data penghuni \"$nama\" berhasil diarsipkan ke sampah/history_hapus.csv dan dihapus dari sistem."
+	else
+		echo -e "\n[X] Data penghuni \"$nama\" tidak ditemukan."
+	fi
+	read -p "Tekan [ENTER] untuk kembali ke menu..."
+}
+```
+Kita dapat menghapus data penghuni dengan mengetikan nama penghuninya.  
+```shell
+record=$(awk -F, -v n="$nama" 'tolower($1)==tolower(n) {print $0; exit}' data/penghuni.csv)
+```
+Perintah ini digunakan untuk melakukan pengecekan apakah nama ada di database, jika ada akan dicetak seluruh baris dan disimpan ke variabel ```$record```.  
+```shell
+	if [[ -n "$record" ]]; then
+		tanggal_hapus=$(date +%Y-%m-%d)
+		echo "$record,$tanggal_hapus" >> sampah/history_hapus.csv
+
+		awk -F, -v n="$nama" 'tolower($1)!=tolower(n)' data/penghuni.csv > data/temp.csv
+		mv data/temp.csv data/penghuni.csv
+```
+
