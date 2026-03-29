@@ -252,7 +252,9 @@ fi
 
 pada bagian awal, kita akan membuat directory dan file yang diperlukan untuk menyimpan data-datanya.   
 
-```shell SCRIPT_PATH=$(realpath "$0")```  
+```shell
+SCRIPT_PATH=$(realpath "$0")
+```  
 
 ini digunakan saat cron mengeksekusi script ini nanti, cron berjalan di environment sistem latar belakang yang tidak tahu tempat menyimpan tugas ini. Dengan menangkap absolute path sejak awal, kita bisa mendaftarkan lokasi script yang akurat ke dalam crontab secara dinamis.   
 
@@ -335,5 +337,7 @@ tambah_penghuni() {
 }
 ```  
 Pertama kita dapat memasukan nama. Selanjutnya, kita akan memasukan nomor kamar.  
-```shell if grep -q  "^.*,$kamar,.*,.*,.*$" data/penghuni.csv;```  
+```shell
+if grep -q  "^.*,$kamar,.*,.*,.*$" data/penghuni.csv;
+```  
 ini digunakan untuk mengecek di file penghuni.csv apakah
