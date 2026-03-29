@@ -41,7 +41,7 @@ tambah_penghuni() {
 	while true; do
 		read -p "Masukan tanggal masuk (YYYY-MM-DD): " tanggal
 		if [[ ! "$tanggal" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
-			echo "Error: format penanggalan salah, gunakan format asia timur (YYYY-MM-DD)"
+			echo "Error: format penanggalan salah, gunakan format timur (YYYY-MM-DD)"
 			continue
 		fi
 
