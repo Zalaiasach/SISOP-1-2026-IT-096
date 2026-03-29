@@ -173,10 +173,10 @@ echo "File $output_file yang dinginkan telah selesai dibuat"
 
 Pada kode ini kita menggunakan ```grep -E '"id"|"site_name"|"latitude"|"longitude"' "$input_file"|\``` untuk mengambil data dari file json.   
 
-Kita menggunakan ```sed -E 's/.*: //; s/[",]//g' | \``` untuk agar kita hanya mengambil bagian yang kita perlukan, jadi yang awalnya ```"latitude": -7.928810``` Hanya akan menjadi ```-7.928810```
+Kita menggunakan ```sed -E 's/.*: //; s/[",]//g' | \``` untuk kita hanya mengambil bagian yang kita perlukan, jadi yang awalnya ```"latitude": -7.928810``` Hanya akan menjadi ```-7.928810``` saja, sehingga bisa digunakan untuk melakukan perhitungan dan outputnya sesuai dengan tugas yang diberikan.  
 
-Untuk penggunaan awk sendiri untuk menggabungkan 4 data yang sudah diambil.  
-Sort digunakan agar berurutan.  
+Untuk penggunaan awk sendiri, digunakan untuk menggabungkan 4 data yang sudah diambil.  ```$0``` berarti kita mengambil data satu baris. ```getline``` digunakan untuk melanjutkan setelah data dapat terambil, misal id sudah terambil, lalu ambil data berikutnya.   
+Sort digunakan agar berurutan sehingga dimulai dari id 1 hingga yang ke 4.  
 
 Setelah dijalankan, akan dibuat sebuah file bernama ```titik-peenting.txt``` yang berisi data-data yang sudah kita ambil.
 
@@ -205,7 +205,9 @@ echo "$lat_akhir, $lon_akhir" > $file_output
 echo "Posisi pusaka sudah tercatat di $file_output"
 ```   
 
-Kita akan ambil data dari ```titik-penting.txt``` yang sebelumnya sudah dibuat dengan menggunakan awk. Kita masukan menjadi variabel dan kita hitung. Setelah dihitung, akan kita letakan hasilnya di file bernama ```posisi-pusaka.txt```  
+Kita akan ambil data dari ```titik-penting.txt``` yang sebelumnya sudah dibuat dengan menggunakan awk. Kita masukan menjadi variabel ```lat1``` dan ```lon1``` yang dimana merupakan letak latitude dan longitude titik pertama. Berikutnya adalah ```lat2``` dan ```lon2``` yang merupakan letak latitude dan longitude titik ke tiga. Letak data latitude di file berada di kolom ke 3 sehingga dipanggilah ```$3``` dan longitude berada di kolom ke 4 sehingga ```$4```.    
+
+Setelah diambil menggunakan awk, kita dapat menghitungnya dengan cara tambahkan kedua latitude, lalu dibagi dua, lakukan juga dengan longitude, dan kita dapat hasilnya. Setelah dihitung, akan kita letakan hasilnya di file bernama ```posisi-pusaka.txt```  
 
 #### Output
 ![soal2parser](assets/soal_2/soal2parser.png)   
@@ -217,3 +219,121 @@ Setelah data terkumpul, kita dapat menjalankan script kedua
 setelah itu akan dibuat file ```posisi-pusaka.txt```
 
 ## Soal 3
+Pada soal ini kita akan membuat sebuah sistem pencatatan data sebuah kos. Fitur-fitur yang diperlukan diantaranya:       
+
+a.Fitur untuk menambah penghuni baru.    
+b.Fitur untuk menghapus penghuni yang sudah tidak tinggal di kos.    
+c.Fitur pembuatan laporan yang menyewa kamar.  
+d.Fitur untuk merubah status penghuni (Aktif/Menunggak).  
+e.Fitur pengingat tagihan menggunakan cronjob
+f.Fitur untuk keluar program   
+
+Scriptnya akan diberi nama kost_slebew.sh. Data-data nya akan di simpann di folder-folder yang berbeda.  
+
+### Script
+Script ini cukup panjang, jadi akan kiat bahas satu persatu.  
+#### Bagian Awal
+```shell
+#!/bin/bash
+
+mkdir -p data log rekap sampah
+touch data/penghuni.csv log/tagihan.log rekap/laporan_bulanan.txt sampah/history_hapus.csv
+
+SCRIPT_PATH=$(realpath "$0")
+
+if [[ "$1" == "--check-tagihan" ]]; then
+	waktu=$(date +"%Y-%m-%d %H:%M:%S")
+	awk -F, -v time="$waktu" 'tolower($5) == "menunggak"{
+		printf "[%s] TAGIHAN: %s (Kamar %s) - Menunggak Rp%s\n", time, $1, $2, $3 >>"log/tagihan.log"
+	}' data/penghuni.csv
+	exit 0
+fi
+```
+
+pada bagian awal, kita akan membuat directory dan file yang diperlukan untuk menyimpan data-datanya.   
+
+```shell SCRIPT_PATH=$(realpath "$0")```  
+
+ini digunakan saat cron mengeksekusi script ini nanti, cron berjalan di environment sistem latar belakang yang tidak tahu tempat menyimpan tugas ini. Dengan menangkap absolute path sejak awal, kita bisa mendaftarkan lokasi script yang akurat ke dalam crontab secara dinamis.   
+
+Pada perintah berikutnya  
+```shell
+if [[ "$1" == "--check-tagihan" ]]; then
+    waktu=$(date +"%Y-%m-%d %H:%M:%S")
+    awk -F, -v time="$waktu" 'tolower($5) == "menunggak"{
+        printf "[%s] TAGIHAN: %s (Kamar %s) - Menunggak Rp%s\n", time, $1, $2, $3 >>"log/tagihan.log"
+    }' data/penghuni.csv
+    exit 0
+fi
+```  
+
+ini digunakan untuk mencatat tagihan otomatis, kita dapat menjalankan program ini dengan perintah ```./kost_slebew.sh --check-tagihan```. Ini akan digunakan juga untuk membuat fitur catat tagihan otomatis menggunakan cronjob.  
+
+#### Tambah Penghuni
+```shell
+tambah_penghuni() {
+	echo "=========================================="
+    	echo "             TAMBAH PENGHUNI              "
+    	echo "=========================================="
+	read -p "Masuka Nama: " nama
+
+	while true; do 
+		read -p "Masukan Kamar: " kamar
+		if grep -q  "^.*,$kamar,.*,.*,.*$" data/penghuni.csv; then
+			echo "Error: Nomor kamar $kamar sudah terisi! pilih kamar yang lain (gaboleh tidur berdua cik)"
+		else
+			break
+		fi
+	done
+
+	while true; do 
+		read -p "Masukan harga sewa: " harga
+		if [[ "$harga" =~ ^[0-9]+$ ]] && [ "$harga" -gt 0 ]; then
+			break
+		else
+			echo "Error: Harga sewa nggak bisa minus (malah yang punya kos yang bayar njir)"
+		fi
+	done
+
+	hari_ini=$(date +%Y-%m-%d)
+	while true; do
+		read -p "Masukan tanggal masuk (YYYY-MM-DD): " tanggal
+		if [[ ! "$tanggal" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
+			echo "Error: format penanggalan salah, gunakan format timur (YYYY-MM-DD)"
+			continue
+		fi
+
+		if ! date -d "$tanggal" >/dev/null 2>&1; then
+			echo "Error: Tanggal nggak valid"
+			continue
+		fi
+
+		if [[ "$tanggal" > "$hari_ini" ]]; then
+			echo "Error: Tanggal tidak boleh dari masa depan (kamu bukan doraemon)"
+		else
+			break
+		fi
+	done
+
+	while true; do
+		read -p "Masukan status awal (Aktif/Menunggak): " status_bayar
+		status_lower=$(echo "$status_bayar" | tr '[:upper:]' '[:lower:]')
+		if [[ "$status_lower" == "aktif" ]]; then
+			status="Aktif"
+			break
+		elif [[ "$status_lower" == "menunggak" ]]; then
+			status="Menunggak"
+			break
+		else
+			echo "Error: Yang bener aja cik. Kalo ngga Aktif, ya Menunggak (pilih satu)"
+		fi
+	done
+
+	echo "$nama,$kamar,$harga,$tanggal,$status" >> data/penghuni.csv
+	echo -e "\n[✓] Penghuni $nama berhasil ditambahkan!"
+    	read -p "Tekan [ENTER] untuk kembali ke menu..."
+}
+```  
+Pertama kita dapat memasukan nama. Selanjutnya, kita akan memasukan nomor kamar.  
+```shell if grep -q  "^.*,$kamar,.*,.*,.*$" data/penghuni.csv;```  
+ini digunakan untuk mengecek di file penghuni.csv apakah
