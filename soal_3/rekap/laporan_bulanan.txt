@@ -1,9 +1,8 @@
 LAPORAN KEUANGAN KOST SLEBEW
 --------------------------------
-Total pemasukan (Aktif) : Rp322000
-Total tunggakan         : Rp60000
+Total pemasukan (Aktif) : Rp332000
+Total tunggakan         : Rp50000
 Jumlah kamar terisi     : 6
 
 Daftar penghuni menunggak:
 - Mas Rusdi (Kamar 22) - Rp50000
-- Awk (Kamar 10) - Rp10000
