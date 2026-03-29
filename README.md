@@ -208,12 +208,12 @@ echo "Posisi pusaka sudah tercatat di $file_output"
 Kita akan ambil data dari ```titik-penting.txt``` yang sebelumnya sudah dibuat dengan menggunakan awk. Kita masukan menjadi variabel dan kita hitung. Setelah dihitung, akan kita letakan hasilnya di file bernama ```posisi-pusaka.txt```  
 
 #### Output
-![soal2parser](assets/soal_2/soal2parser.png)  
-Sebelum menjalankan script ```nemupusaka.sh``` kita menjalankan script ini dulu ![soal2titikPenting](assets/soal_2/soal2titikPenting.png) 
+![soal2parser](assets/soal_2/soal2parser.png)   
+Sebelum menjalankan script ```nemupusaka.sh``` kita menjalankan script ini dulu ![soal2titikPenting](assets/soal_2/soal2titikPenting.png)  
 setelah itu akan dibuat file ```titik-penting.txt``` beserta isinya   
-![soal2nemu](assets/soal_2/soal2nemu.png)
+![soal2nemu](assets/soal_2/soal2nemu.png)  
 Setelah data terkumpul, kita dapat menjalankan script kedua  
-![soal2posisiPusaka](assets/soal_2/soal2posisiPusaka.png)
+![soal2posisiPusaka](assets/soal_2/soal2posisiPusaka.png)  
 setelah itu akan dibuat file ```posisi-pusaka.txt```
 
 ## Soal 3
