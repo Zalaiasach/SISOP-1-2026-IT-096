@@ -181,5 +181,39 @@ Sort digunakan agar berurutan.
 Setelah dijalankan, akan dibuat sebuah file bernama ```titik-peenting.txt``` yang berisi data-data yang sudah kita ambil.
 
 #### nemupusaka.sh
-Setelah kita mengambil data, kita akan mencari titik lokasi pusaka dengan rumus:  
-$$\left( \frac{x_1 + x_2}{2}, \frac{y_1 + y_2}{2} \right)$$
+Setelah kita jalankan script sebelumnya dan mengambil data, kita akan mencari titik lokasi pusaka dengan rumus:  
+$$\left( \frac{x_1 + x_2}{2}, \frac{y_1 + y_2}{2} \right)$$  
+
+Karena kita mengambil titik tengah kita ambil dua titik yang berhadapan secara diagonal, misal titik 1 dan titik 3.  
+```shell
+#!/bin/bash
+
+file="titik-penting.txt"
+file_output="posisipusaka.txt"
+
+lat1=$(awk -F',' 'NR==1 {print $3}' "$file")
+lon1=$(awk -F',' 'NR==1 {print $4}' "$file")
+
+lat2=$(awk -F',' 'NR==3 {print $3}' "$file")
+lon2=$(awk -F',' 'NR==3 {print $4}' "$file")
+
+lat_akhir=$(echo "scale=5;($lat1+$lat2) /2"|bc)
+lon_akhir=$(echo "scale=5;($lon1+$lon2) /2"|bc)
+
+echo "Koordinat pusatnya di: $lat_akhir, $lon_akhir"
+echo "$lat_akhir, $lon_akhir" > $file_output
+echo "Posisi pusaka sudah tercatat di $file_output"
+```   
+
+Kita akan ambil data dari ```titik-penting.txt``` yang sebelumnya sudah dibuat dengan menggunakan awk. Kita masukan menjadi variabel dan kita hitung. Setelah dihitung, akan kita letakan hasilnya di file bernama ```posisi-pusaka.txt```  
+
+#### Output
+![soal2parser](assets/soal_2/soal2parser.png)  
+Sebelum menjalankan script ```nemupusaka.sh``` kita menjalankan script ini dulu ![soal2titikPenting](assets/soal_2/soal2titikPenting.png) 
+setelah itu akan dibuat file ```titik-penting.txt``` beserta isinya   
+![soal2nemu](assets/soal_2/soal2nemu.png)
+Setelah data terkumpul, kita dapat menjalankan script kedua  
+![soal2posisiPusaka](assets/soal_2/soal2posisiPusaka.png)
+setelah itu akan dibuat file ```posisi-pusaka.txt```
+
+## Soal 3
