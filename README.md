@@ -182,4 +182,4 @@ Setelah dijalankan, akan dibuat sebuah file bernama ```titik-peenting.txt``` yan
 
 #### nemupusaka.sh
 Setelah kita mengambil data, kita akan mencari titik lokasi pusaka dengan rumus:  
-$$Midpoint = \left( \frac{x_1 + x_2}{2}, \frac{y_1 + y_2}{2} \right)$$
+$$\left( \frac{x_1 + x_2}{2}, \frac{y_1 + y_2}{2} \right)$$
